@@ -104,8 +104,7 @@
 
 Добавьте одну диаграмму или несколько.
 
-- [Сервис устройств](./diagrams/to-be/code/device-service.puml)
-- [Сервис телеметрии](./diagrams/to-be/code/telemetry-service.puml)
+- [Отправка команды устройству](./diagrams/to-be/code/device-command-code.puml)
 
 # Задание 3. Разработка ER-диаграммы
 

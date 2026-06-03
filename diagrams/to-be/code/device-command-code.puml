@@ -1,0 +1,59 @@
+@startuml
+
+title Диаграмма кода компонента обработки команд сервиса устройств
+
+top to bottom direction
+
+class CommandController {
+  +UUID createCommand(UUID deviceId, CommandCreateRequest request)
+}
+
+class CommandService {
+  +UUID createCommand(UUID deviceId, CommandCreateRequest request)
+}
+
+interface DeviceRepository {
+  +Device findById(UUID deviceId)
+}
+
+interface CommandRepository {
+  +DeviceCommand save(DeviceCommand command)
+}
+
+interface CommandPublisher {
+  +void publish(DeviceCommand command)
+}
+
+class CommandCreateRequest {
+  +String commandType
+  +String parameters
+}
+
+class Device {
+  +UUID id
+  +UUID homeId
+  +String name
+  +String type
+  +String status
+}
+
+class DeviceCommand {
+  +UUID id
+  +UUID deviceId
+  +String commandType
+  +String status
+  +String parameters
+  +LocalDateTime createdAt
+}
+
+CommandCreateRequest --> CommandController : тело запроса
+CommandController --> CommandService : вызывает
+
+CommandService --> DeviceRepository : проверяет устройство
+CommandService --> CommandRepository : сохраняет команду
+CommandService --> CommandPublisher : отправляет на исполнение
+
+DeviceRepository --> Device : возвращает
+CommandRepository --> DeviceCommand : сохраняет
+
+@enduml
