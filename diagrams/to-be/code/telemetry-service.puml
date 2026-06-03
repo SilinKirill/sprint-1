@@ -1,0 +1,48 @@
+@startuml
+
+title Диаграмма кода сервиса телеметрии
+
+top to bottom direction
+
+class Telemetry {
+  +UUID id
+  +UUID deviceId
+  +UUID metricId
+  +String value
+  +LocalDateTime occurredAt
+  +LocalDateTime createdAt
+
+  +void create()
+}
+
+class TelemetryMetric {
+  +UUID id
+  +TelemetryMetricCode code
+  +String name
+  +TelemetryValueType valueType
+  +String unit
+  +Boolean enabled
+
+  +void create()
+  +void update()
+}
+
+enum TelemetryMetricCode {
+  TEMPERATURE
+  HUMIDITY
+  BATTERY
+  SIGNAL
+}
+
+enum TelemetryValueType {
+  NUMBER
+  BOOLEAN
+  STRING
+}
+
+Telemetry "0..*" -- "1" TelemetryMetric : метрика
+
+TelemetryMetric "1" -- "1" TelemetryMetricCode : код
+TelemetryMetric "1" -- "1" TelemetryValueType : тип значения
+
+@enduml

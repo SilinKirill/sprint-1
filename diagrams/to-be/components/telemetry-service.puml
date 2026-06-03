@@ -1,0 +1,28 @@
+@startuml
+
+title Диаграмма компонентов сервиса телеметрии
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Container_Boundary(WarmHouseSystem, "Тёплый дом") {
+  Container(TelemetryService, "Сервис телеметрии", "Microservice", "Данные с устройств")
+  Container(MessageBroker, "Брокер сообщений", "Kafka/RabbitMQ", "Асинхронный обмен")
+  Container(Database, "База данных сервиса", "Database", "Хранилище данных")
+}
+
+Container(TelemetryService, "Сервис телеметрии", "Microservice") {
+  Component(TelemetryController, "TelemetryController", "API телеметрии")
+  Component(TelemetryConsumer, "TelemetryConsumer", "Получение событий")
+  Component(TelemetryServiceLayer, "TelemetryService", "Обработка телеметрии")
+  Component(TelemetryRepository, "TelemetryRepository", "Доступ к данным телеметрии")
+}
+
+Rel(TelemetryController, TelemetryServiceLayer, "Запрашивает данные")
+Rel(MessageBroker, TelemetryConsumer, "Телеметрия")
+Rel(TelemetryConsumer, TelemetryServiceLayer, "Передаёт события")
+Rel(TelemetryServiceLayer, TelemetryRepository, "Телеметрия")
+Rel(TelemetryRepository, Database, "Телеметрия")
+
+@enduml

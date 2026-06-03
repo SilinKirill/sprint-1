@@ -87,13 +87,25 @@
 
 Добавьте диаграмму.
 
+[Диаграмма контейнеров To-Be](./diagrams/to-be/containers/containers.puml)
+
 **Диаграмма компонентов (Components)**
 
 Добавьте диаграмму для каждого из выделенных микросервисов.
 
+- [Сервис пользователей](./diagrams/to-be/components/user-service.puml)
+- [Сервис домов](./diagrams/to-be/components/home-service.puml)
+- [Сервис устройств](./diagrams/to-be/components/device-service.puml)
+- [Сервис телеметрии](./diagrams/to-be/components/telemetry-service.puml)
+- [Сервис сценариев](./diagrams/to-be/components/scenario-service.puml)
+- [Сервис адаптеров устройств](./diagrams/to-be/components/device-adapter-service.puml)
+
 **Диаграмма кода (Code)**
 
 Добавьте одну диаграмму или несколько.
+
+- [Сервис устройств](./diagrams/to-be/code/device-service.puml)
+- [Сервис телеметрии](./diagrams/to-be/code/telemetry-service.puml)
 
 # Задание 3. Разработка ER-диаграммы
 

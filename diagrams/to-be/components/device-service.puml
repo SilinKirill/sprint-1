@@ -1,0 +1,32 @@
+@startuml
+
+title Диаграмма компонентов сервиса устройств
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Container_Boundary(WarmHouseSystem, "Тёплый дом") {
+  Container(DeviceService, "Сервис устройств", "Microservice", "Устройства и команды")
+  Container(MessageBroker, "Брокер сообщений", "Kafka/RabbitMQ", "Асинхронный обмен")
+  Container(Database, "База данных сервиса", "Database", "Хранилище данных")
+}
+
+Container(DeviceService, "Сервис устройств", "Microservice") {
+  Component(DeviceController, "DeviceController", "API устройств")
+  Component(CommandController, "CommandController", "API команд")
+  Component(DeviceServiceLayer, "DeviceService", "Бизнес-логика устройств")
+  Component(CommandService, "CommandService", "Формирование команд")
+  Component(DeviceRepository, "DeviceRepository", "Доступ к данным устройств")
+  Component(CommandPublisher, "CommandPublisher", "Публикация команд")
+}
+
+Rel(DeviceController, DeviceServiceLayer, "Вызывает")
+Rel(CommandController, CommandService, "Вызывает")
+Rel(DeviceServiceLayer, DeviceRepository, "Данные устройств")
+Rel(CommandService, DeviceRepository, "Проверяет устройство")
+Rel(CommandService, CommandPublisher, "Передаёт команду")
+Rel(DeviceRepository, Database, "Данные устройств")
+Rel(CommandPublisher, MessageBroker, "Команды устройств")
+
+@enduml
