@@ -1,0 +1,150 @@
+openapi: 3.2.0
+
+info:
+  title: Warm House Device Service API
+  version: 1.0.0
+  description: REST API сервиса устройств и команд системы "Тёплый дом"
+
+servers:
+  - url: http://localhost:8080
+    description: API Gateway
+
+paths:
+  /api/v1/devices/{deviceId}:
+    get:
+      summary: Получить информацию об устройстве
+      parameters:
+        - name: deviceId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          examples:
+            deviceId:
+              value: "33333333-3333-3333-3333-333333333333"
+      responses:
+        '200':
+          description: Информация об устройстве
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceResponse'
+              examples:
+                success:
+                  value:
+                    id: "33333333-3333-3333-3333-333333333333"
+                    houseId: "22222222-2222-2222-2222-222222222222"
+                    typeId: "44444444-4444-4444-4444-444444444444"
+                    name: "Реле отопления"
+                    serialNumber: "WH-HEAT-0001"
+                    status: "ACTIVE"
+        '404':
+          description: Устройство не найдено
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /api/v1/devices/{deviceId}/commands:
+    post:
+      summary: Создать команду для устройства
+      description: Команда сохраняется в сервисе устройств и далее передаётся через Kafka/RabbitMQ в сервис адаптеров устройств.
+      parameters:
+        - name: deviceId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          examples:
+            deviceId:
+              value: "33333333-3333-3333-3333-333333333333"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommandCreateRequest'
+            examples:
+              turnOn:
+                value:
+                  commandType: "TURN_ON"
+                  parameters:
+                    targetTemperature: 22
+              openGate:
+                value:
+                  commandType: "OPEN"
+                  parameters: {}
+      responses:
+        '201':
+          description: Команда создана
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceCommandResponse'
+              examples:
+                created:
+                  value:
+                    id: "55555555-5555-5555-5555-555555555555"
+                    deviceId: "33333333-3333-3333-3333-333333333333"
+                    commandType: "TURN_ON"
+                    commandStatus: "CREATED"
+                    parameters:
+                      targetTemperature: 22
+                    createdAt: "2026-06-04T12:00:00"
+        '400':
+          description: Некорректный запрос
+        '404':
+          description: Устройство не найдено
+        '500':
+          description: Внутренняя ошибка сервера
+
+components:
+  schemas:
+    DeviceResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        houseId:
+          type: string
+          format: uuid
+        typeId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        serialNumber:
+          type: string
+        status:
+          type: string
+
+    CommandCreateRequest:
+      type: object
+      properties:
+        commandType:
+          type: string
+          example: "TURN_ON"
+        parameters:
+          type: object
+          additionalProperties: true
+
+    DeviceCommandResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        deviceId:
+          type: string
+          format: uuid
+        commandType:
+          type: string
+        commandStatus:
+          type: string
+        parameters:
+          type: object
+          additionalProperties: true
+        createdAt:
+          type: string
+          format: date-time
