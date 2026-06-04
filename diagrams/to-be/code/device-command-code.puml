@@ -25,25 +25,27 @@ interface CommandPublisher {
 }
 
 class CommandCreateRequest {
-  +String commandType
+  +CommandType commandType
   +String parameters
 }
 
 class Device {
   +UUID id
-  +UUID homeId
+  +UUID houseId
+  +UUID typeId
   +String name
-  +String type
-  +String status
+  +String serialNumber
+  +DeviceStatus status
 }
 
 class DeviceCommand {
   +UUID id
   +UUID deviceId
-  +String commandType
-  +String status
+  +CommandType commandType
+  +CommandStatus commandStatus
   +String parameters
   +LocalDateTime createdAt
+  +LocalDateTime updatedAt
 }
 
 CommandCreateRequest --> CommandController : тело запроса
