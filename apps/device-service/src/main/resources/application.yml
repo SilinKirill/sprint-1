@@ -4,3 +4,10 @@ server:
 spring:
   application:
     name: device-service
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+
+device:
+  command:
+    queue: device.commands

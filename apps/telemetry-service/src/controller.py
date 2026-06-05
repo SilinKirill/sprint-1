@@ -1,6 +1,7 @@
 import json
 from dataclasses import asdict
 from datetime import datetime, timezone
+from random import uniform
 from urllib.parse import parse_qs, urlparse
 from uuid import uuid4
 
@@ -36,11 +37,13 @@ class TelemetryController:
         return 200, asdict(item)
 
     def create_telemetry(self, payload: dict):
+        value = payload.get("value", round(uniform(20, 25), 1))
+
         telemetry = Telemetry(
             id=str(uuid4()),
             device_id=payload.get("deviceId", "33333333-3333-3333-3333-333333333333"),
             type=payload.get("type", "temperature"),
-            value=str(payload.get("value", "22.0")),
+            value=str(value),
             unit=payload.get("unit", "°C"),
             measured_at=payload.get(
                 "measuredAt",

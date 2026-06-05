@@ -1,5 +1,15 @@
 services:
 
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: smarthome-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    restart: unless-stopped
+    networks:
+      - smarthome-network
+
   postgres:
     image: postgres:16-alpine
     container_name: smarthome-postgres
@@ -32,8 +42,13 @@ services:
   device-service:
     build: ./device-service
     container_name: device-service
+    environment:
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
     ports:
       - "8082:8082"
+    depends_on:
+      - rabbitmq
     restart: unless-stopped
     networks:
       - smarthome-network
@@ -69,3 +84,4 @@ volumes:
 
 networks:
   smarthome-network:
+    driver: bridge

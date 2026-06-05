@@ -212,7 +212,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"deviceId\": \"33333333-3333-3333-3333-333333333333\",\n    \"type\": \"temperature\",\n    \"value\": \"23.5\",\n    \"unit\": \"°C\"\n}"
+                            "raw": "{\n    \"deviceId\": \"33333333-3333-3333-3333-333333333333\",\n    \"type\": \"temperature\",\n    \"unit\": \"°C\"\n}"
                         },
                         "url": {
                             "raw": "{{telemetryServiceUrl}}/telemetry",

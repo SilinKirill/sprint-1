@@ -1,15 +1,21 @@
 package ru.warmhouse.deviceservice.publisher;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.warmhouse.deviceservice.model.DeviceCommand;
 
-@Slf4j
 @Component
+@RequiredArgsConstructor
 public class CommandPublisher {
 
+    private final RabbitTemplate rabbitTemplate;
+
+    @Value("${device.command.queue}")
+    private String commandQueue;
+
     public void publish(DeviceCommand command) {
-        // TODO: publish command to MessageBroker for DeviceAdapterService
-        log.info("Command sent: deviceId={}, commandType={}", command.getDeviceId(), command.getCommandType());
+        rabbitTemplate.convertAndSend(commandQueue, command);
     }
 }
