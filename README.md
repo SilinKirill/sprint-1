@@ -191,6 +191,9 @@ Locations - название комнаты, sensorId - идентификато
 
 Ревьюер будет проверять точно так же.
 
+- [Конфигурация Docker Compose](./apps/docker-compose.yml)
+- [Сервис temperature-api](./apps/temperature-api/TemperatureApi.java)
+- [Dockerfile сервиса temperature-api](./apps/temperature-api/Dockerfile)
 
 # **Задание 6. Разработка MVP**
 
