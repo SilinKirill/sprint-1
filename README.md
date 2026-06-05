@@ -205,3 +205,32 @@ Locations - название комнаты, sensorId - идентификато
 2. Обеспечьте взаимодействие между микросервисами и монолитом (при желании с помощью брокера сообщений), чтобы постепенно перенести функциональность из монолита в микросервисы. 
 
 В результате у вас должны быть созданы Dockerfiles и docker-compose для запуска микросервисов. 
+
+### Реализация
+
+Для выполнения задания созданы два MVP-микросервиса:
+
+- [Сервис устройств](./apps/device-service)
+- [Сервис телеметрии](./apps/telemetry-service)
+
+### Интеграция
+
+Реализовано взаимодействие между монолитом и новыми микросервисами по REST API.
+
+### Docker
+
+Для запуска добавлены:
+
+- [Dockerfile сервиса устройств](./apps/device-service/Dockerfile)
+- [Dockerfile сервиса телеметрии](./apps/telemetry-service/Dockerfile)
+- [Docker Compose для MVP](./apps/docker-compose.mvp.yml)
+
+### Проверка
+
+- [Postman-коллекция MVP](./apps/mvp-api.postman_collection.json)
+
+### Запуск
+
+```
+    docker compose -f docker-compose.mvp.yml up --build
+```
