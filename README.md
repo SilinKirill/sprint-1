@@ -128,13 +128,17 @@
 
 Здесь приложите ссылки на документацию API для микросервисов, которые вы спроектировали в первой части проектной работы. Для документирования используйте Swagger/OpenAPI или AsyncAPI.
 
-Документация API подготовлена в формате OpenAPI 3.2.0 и разбита по микросервисам.
+Документация синхронных REST API подготовлена в формате OpenAPI 3.2.0 и разбита по микросервисам.
 
 - [Сервис пользователей](./schemas/user-service-openapi.yml)
 - [Сервис домов](./schemas/home-service-openapi.yml)
 - [Сервис устройств](./schemas/device-service-openapi.yml)
 - [Сервис телеметрии](./schemas/telemetry-service-openapi.yml)
 - [Сервис сценариев](./schemas/scenario-service-openapi.yml)
+
+Документация асинхронного взаимодействия через брокер сообщений подготовлена в формате AsyncAPI.
+
+- [Команды устройств](./schemas/device-commands-asyncapi.yml)
 
 # Задание 5. Работа с docker и docker-compose
 
