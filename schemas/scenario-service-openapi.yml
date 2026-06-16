@@ -1,0 +1,120 @@
+openapi: 3.2.0
+
+info:
+  title: Warm House Scenario Service API
+  version: 1.0.0
+  description: REST API сервиса сценариев системы "Тёплый дом"
+
+servers:
+  - url: http://localhost:8080
+    description: API Gateway
+
+paths:
+  /api/v1/houses/{houseId}/scenarios:
+    post:
+      summary: Создать сценарий автоматизации
+      parameters:
+        - name: houseId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          examples:
+            houseId:
+              value: "22222222-2222-2222-2222-222222222222"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScenarioCreateRequest'
+            examples:
+              heatingScenario:
+                value:
+                  name: "Включить отопление при низкой температуре"
+                  condition: "temperature < 18"
+                  enabled: true
+                  actions:
+                    - deviceId: "33333333-3333-3333-3333-333333333333"
+                      commandType: "TURN_ON"
+                      parameters:
+                        targetTemperature: 22
+      responses:
+        '201':
+          description: Сценарий создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScenarioResponse'
+              examples:
+                created:
+                  value:
+                    id: "66666666-6666-6666-6666-666666666666"
+                    houseId: "22222222-2222-2222-2222-222222222222"
+                    name: "Включить отопление при низкой температуре"
+                    condition: "temperature < 18"
+                    enabled: true
+                    actions:
+                      - deviceId: "33333333-3333-3333-3333-333333333333"
+                        commandType: "TURN_ON"
+                        parameters:
+                          targetTemperature: 22
+                    createdAt: "2026-06-04T12:00:00"
+        '400':
+          description: Некорректный запрос
+        '404':
+          description: Дом не найден
+        '500':
+          description: Внутренняя ошибка сервера
+
+components:
+  schemas:
+    ScenarioCreateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        condition:
+          type: string
+        enabled:
+          type: boolean
+        actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScenarioActionRequest'
+
+    ScenarioActionRequest:
+      type: object
+      properties:
+        deviceId:
+          type: string
+          format: uuid
+        commandType:
+          type: string
+        parameters:
+          type: object
+          additionalProperties: true
+
+    ScenarioResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        houseId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        condition:
+          type: string
+        enabled:
+          type: boolean
+        actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScenarioActionRequest'
+        createdAt:
+          type: string
+          format: date-time

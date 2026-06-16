@@ -1,0 +1,88 @@
+asyncapi: 3.0.0
+
+info:
+  title: Warm House Device Commands Async API
+  version: 1.0.0
+  description: |
+    Асинхронный API для передачи команд устройствам через брокер сообщений.
+    В MVP device-service публикует команды в очередь RabbitMQ device.commands.
+
+servers:
+  rabbitmq:
+    host: rabbitmq:5672
+    protocol: amqp
+    description: RabbitMQ broker inside Docker network
+
+channels:
+  deviceCommands:
+    address: device.commands
+    description: Очередь команд устройств
+    messages:
+      DeviceCommandMessage:
+        $ref: '#/components/messages/DeviceCommandMessage'
+
+operations:
+  publishDeviceCommand:
+    action: send
+    channel:
+      $ref: '#/channels/deviceCommands'
+    messages:
+      - $ref: '#/channels/deviceCommands/messages/DeviceCommandMessage'
+    summary: Публикация команды устройства
+    description: Device Service публикует команду устройства в очередь device.commands.
+
+components:
+  messages:
+    DeviceCommandMessage:
+      name: DeviceCommandMessage
+      title: Команда устройства
+      summary: Сообщение с командой для устройства
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/DeviceCommand'
+
+  schemas:
+    DeviceCommand:
+      type: object
+      required:
+        - id
+        - deviceId
+        - commandType
+        - commandStatus
+        - parameters
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 55555555-5555-5555-5555-555555555555
+        deviceId:
+          type: string
+          format: uuid
+          example: 33333333-3333-3333-3333-333333333333
+        commandType:
+          type: string
+          enum:
+            - TURN_ON
+            - TURN_OFF
+            - SET_TEMPERATURE
+          example: TURN_ON
+        commandStatus:
+          type: string
+          enum:
+            - CREATED
+            - SENT
+          example: CREATED
+        parameters:
+          type: string
+          description: JSON-строка с параметрами команды
+          example: "{}"
+        createdAt:
+          type: string
+          format: date-time
+          example: 2026-06-08T10:00:00Z
+        updatedAt:
+          type: string
+          format: date-time
+          example: 2026-06-08T10:00:00Z

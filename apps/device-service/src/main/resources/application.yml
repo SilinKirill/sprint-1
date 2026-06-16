@@ -1,0 +1,13 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: device-service
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+
+device:
+  command:
+    queue: device.commands

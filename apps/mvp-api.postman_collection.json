@@ -1,0 +1,342 @@
+{
+    "info": {
+        "_postman_id": "a6f3e7d4-8b91-4c7d-9c22-0f3c2e1d6a50",
+        "name": "Smart Home MVP API",
+        "description": "A collection for testing Smart Home monolith integration with MVP microservices",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Monolith Integration",
+            "item": [
+                {
+                    "name": "Health Check Monolith",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{monolithUrl}}/health",
+                            "host": [
+                                "{{monolithUrl}}"
+                            ],
+                            "path": [
+                                "health"
+                            ]
+                        },
+                        "description": "Check if the Go monolith is running"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Devices Through Monolith",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{monolithUrl}}/api/v1/devices",
+                            "host": [
+                                "{{monolithUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "devices"
+                            ]
+                        },
+                        "description": "Check integration: Go monolith calls Java Device Service"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Telemetry Through Monolith",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{monolithUrl}}/api/v1/telemetry",
+                            "host": [
+                                "{{monolithUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "telemetry"
+                            ]
+                        },
+                        "description": "Check integration: Go monolith calls Python Telemetry Service"
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Device Service Direct",
+            "item": [
+                {
+                    "name": "Health Check Device Service",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{deviceServiceUrl}}/actuator/health",
+                            "host": [
+                                "{{deviceServiceUrl}}"
+                            ],
+                            "path": [
+                                "actuator",
+                                "health"
+                            ]
+                        },
+                        "description": "Check if Java Device Service is running"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Devices Direct",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{deviceServiceUrl}}/devices",
+                            "host": [
+                                "{{deviceServiceUrl}}"
+                            ],
+                            "path": [
+                                "devices"
+                            ]
+                        },
+                        "description": "Get devices directly from Java Device Service"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Device by ID Direct",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{deviceServiceUrl}}/devices/{{deviceId}}",
+                            "host": [
+                                "{{deviceServiceUrl}}"
+                            ],
+                            "path": [
+                                "devices",
+                                "{{deviceId}}"
+                            ]
+                        },
+                        "description": "Get one device directly from Java Device Service"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create Device Command Direct",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"commandType\": \"TURN_ON\",\n    \"parameters\": \"{}\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{deviceServiceUrl}}/devices/{{deviceId}}/commands",
+                            "host": [
+                                "{{deviceServiceUrl}}"
+                            ],
+                            "path": [
+                                "devices",
+                                "{{deviceId}}",
+                                "commands"
+                            ]
+                        },
+                        "description": "Create command directly in Java Device Service"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Device Commands Direct",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{deviceServiceUrl}}/devices/{{deviceId}}/commands",
+                            "host": [
+                                "{{deviceServiceUrl}}"
+                            ],
+                            "path": [
+                                "devices",
+                                "{{deviceId}}",
+                                "commands"
+                            ]
+                        },
+                        "description": "Get commands directly from Java Device Service"
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Telemetry Service Direct",
+            "item": [
+                {
+                    "name": "Health Check Telemetry Service",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{telemetryServiceUrl}}/health",
+                            "host": [
+                                "{{telemetryServiceUrl}}"
+                            ],
+                            "path": [
+                                "health"
+                            ]
+                        },
+                        "description": "Check if Python Telemetry Service is running"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create Telemetry Direct",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"deviceId\": \"33333333-3333-3333-3333-333333333333\",\n    \"type\": \"temperature\",\n    \"unit\": \"°C\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{telemetryServiceUrl}}/telemetry",
+                            "host": [
+                                "{{telemetryServiceUrl}}"
+                            ],
+                            "path": [
+                                "telemetry"
+                            ]
+                        },
+                        "description": "Create telemetry record directly in Python Telemetry Service"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Telemetry Direct",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{telemetryServiceUrl}}/telemetry",
+                            "host": [
+                                "{{telemetryServiceUrl}}"
+                            ],
+                            "path": [
+                                "telemetry"
+                            ]
+                        },
+                        "description": "Get all telemetry directly from Python Telemetry Service"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Telemetry by Device Direct",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{telemetryServiceUrl}}/telemetry?deviceId={{deviceId}}",
+                            "host": [
+                                "{{telemetryServiceUrl}}"
+                            ],
+                            "path": [
+                                "telemetry"
+                            ],
+                            "query": [
+                                {
+                                    "key": "deviceId",
+                                    "value": "{{deviceId}}"
+                                }
+                            ]
+                        },
+                        "description": "Get telemetry by device directly from Python Telemetry Service"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Latest Telemetry Direct",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{telemetryServiceUrl}}/telemetry/latest?deviceId={{deviceId}}",
+                            "host": [
+                                "{{telemetryServiceUrl}}"
+                            ],
+                            "path": [
+                                "telemetry",
+                                "latest"
+                            ],
+                            "query": [
+                                {
+                                    "key": "deviceId",
+                                    "value": "{{deviceId}}"
+                                }
+                            ]
+                        },
+                        "description": "Get latest telemetry directly from Python Telemetry Service"
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ],
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        },
+        {
+            "listen": "test",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        }
+    ],
+    "variable": [
+        {
+            "key": "monolithUrl",
+            "value": "http://localhost:8080",
+            "type": "string"
+        },
+        {
+            "key": "deviceServiceUrl",
+            "value": "http://localhost:8082",
+            "type": "string"
+        },
+        {
+            "key": "telemetryServiceUrl",
+            "value": "http://localhost:8083",
+            "type": "string"
+        },
+        {
+            "key": "deviceId",
+            "value": "33333333-3333-3333-3333-333333333333",
+            "type": "string"
+        }
+    ]
+}

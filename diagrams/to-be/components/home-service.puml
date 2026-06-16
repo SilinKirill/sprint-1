@@ -1,0 +1,30 @@
+@startuml
+
+title Диаграмма компонентов сервиса домов
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Container_Boundary(WarmHouseSystem, "Тёплый дом") {
+  Container(HomeService, "Сервис домов", "Microservice", "Дома пользователей")
+  Container(Database, "База данных сервиса", "Database", "Хранилище данных")
+}
+
+Container(HomeService, "Сервис домов", "Microservice") {
+    Component(HomeController, "HomeController", "Управление домами")
+    Component(HomeDeviceController, "HomeDeviceController", "Привязка устройств")
+    Component(HomeServiceLayer, "HomeService", "Бизнес-логика домов")
+    Component(HomeDeviceService, "HomeDeviceService", "Связь домов и устройств")
+    Component(HomeRepository, "HomeRepository", "Данные домов")
+    Component(HomeDeviceRepository, "HomeDeviceRepository", "Связи домов и устройств")
+}
+
+Rel(HomeController, HomeServiceLayer, "Вызывает")
+Rel(HomeDeviceController, HomeDeviceService, "Вызывает")
+Rel(HomeServiceLayer, HomeRepository, "Данные домов")
+Rel(HomeDeviceService, HomeDeviceRepository, "Связи устройств")
+Rel(HomeRepository, Database, "Данные домов")
+Rel(HomeDeviceRepository, Database, "Связи домов и устройств")
+
+@enduml

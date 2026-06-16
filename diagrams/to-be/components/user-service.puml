@@ -1,0 +1,36 @@
+@startuml
+
+title Диаграмма компонентов сервиса пользователей
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Container_Boundary(WarmHouseSystem, "Тёплый дом") {
+  Container(UserService, "Сервис пользователей", "Microservice", "Пользователи и доступы")
+  Container(Database, "База данных сервиса", "Database", "Хранилище данных")
+}
+
+Container(UserService, "Сервис пользователей", "Microservice") {
+  Component(UserController, "UserController", "API пользователей")
+  Component(AuthController, "AuthController", "Аутентификация")
+  Component(AccessController, "AccessController", "Права доступа")
+
+  Component(UserServiceLayer, "UserService", "Бизнес-логика пользователей")
+  Component(AuthServiceLayer, "AuthService", "Логика аутентификации")
+  Component(AccessService, "AccessService", "Проверка прав доступа")
+
+  Component(UserRepository, "UserRepository", "Доступ к данным")
+}
+
+Rel(UserController, UserServiceLayer, "Вызывает")
+Rel(AuthController, AuthServiceLayer, "Вызывает")
+Rel(AccessController, AccessService, "Вызывает")
+
+Rel(UserServiceLayer, UserRepository, "Данные пользователей")
+Rel(AuthServiceLayer, UserRepository, "Данные пользователей")
+Rel(AccessService, UserRepository, "Данные доступов")
+
+Rel(UserRepository, Database, "Данные пользователей и доступов")
+
+@enduml

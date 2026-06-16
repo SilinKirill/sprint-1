@@ -1,0 +1,38 @@
+@startuml
+
+title Диаграмма компонентов сервиса адаптеров устройств
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Container_Boundary(WarmHouseSystem, "Тёплый дом") {
+  Container(DeviceAdapterService, "Сервис адаптеров устройств", "Microservice", "Связь с устройствами")
+  Container(MessageBroker, "Брокер сообщений", "Kafka/RabbitMQ", "Асинхронный обмен")
+}
+
+System_Ext(ControlModules, "Модули управления", "Отопление, свет и другие модули")
+System_Ext(Sensors, "Датчики", "Температура, камеры и другие данные")
+
+Container(DeviceAdapterService, "Сервис адаптеров устройств", "Microservice") {
+  Component(CommandConsumer, "CommandConsumer", "Получение команд")
+  Component(ProtocolRouter, "ProtocolRouter", "Выбор адаптера")
+  Component(ControlModuleAdapter, "ControlModuleAdapter", "Управление модулями")
+  Component(SensorAdapter, "SensorAdapter", "Получение данных")
+  Component(DeviceEventPublisher, "DeviceEventPublisher", "Публикация событий")
+}
+
+Rel(MessageBroker, CommandConsumer, "Команды устройств")
+Rel(CommandConsumer, ProtocolRouter, "Передаёт команду")
+
+Rel(ProtocolRouter, ControlModuleAdapter, "Команда управления")
+Rel(ProtocolRouter, SensorAdapter, "Запрос данных")
+
+Rel(ControlModuleAdapter, ControlModules, "Команды управления")
+Rel(SensorAdapter, Sensors, "Получение данных")
+
+Rel(ControlModuleAdapter, DeviceEventPublisher, "Результат команды")
+Rel(SensorAdapter, DeviceEventPublisher, "Данные датчиков")
+Rel(DeviceEventPublisher, MessageBroker, "События устройств")
+
+@enduml

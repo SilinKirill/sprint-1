@@ -1,0 +1,54 @@
+@startuml
+
+title Диаграмма контейнеров To-Be системы "Тёплый дом"
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Container.puml
+
+Person(user, "Пользователь", "Управляет умным домом")
+System(WarmHouseSystem, "Тёплый дом", "SaaS-экосистема умного дома")
+
+Container_Boundary(WarmHouseSystem, "Тёплый дом") {
+  Container(WebApp, "Веб-интерфейс", "Web", "Управление умным домом")
+  Container(ApiGateway, "API Gateway", "HTTP API", "Единая точка входа")
+
+  Container(UserService, "Сервис пользователей", "Microservice", "Пользователи и доступы")
+  Container(HomeService, "Сервис домов", "Microservice", "Дома пользователей")
+  Container(DeviceService, "Сервис устройств", "Microservice", "Устройства и команды")
+  Container(TelemetryService, "Сервис телеметрии", "Microservice", "Данные с устройств")
+  Container(ScenarioService, "Сервис сценариев", "Microservice", "Сценарии автоматизации")
+  Container(DeviceAdapterService, "Сервис адаптеров устройств", "Microservice", "Протоколы устройств")
+
+  Container(MessageBroker, "Брокер сообщений", "Kafka/RabbitMQ", "Асинхронный обмен")
+  Container(Database, "Базы данных сервисов", "Database", "Хранилище данных")
+}
+
+System_Ext(ControlModules, "Модули управления", "Отопление, свет и другие модули")
+System_Ext(Sensors, "Датчики", "Температура, камеры и другие данные")
+
+Rel(user, WebApp, "Использует")
+Rel(WebApp, ApiGateway, "HTTP")
+
+Rel(ApiGateway, UserService, "Пользователи")
+Rel(ApiGateway, HomeService, "Дома")
+Rel(ApiGateway, DeviceService, "Устройства")
+
+Rel(ApiGateway, TelemetryService, "Телеметрия")
+Rel(ApiGateway, ScenarioService, "Сценарии")
+
+Rel(UserService, Database, "Данные пользователей")
+Rel(HomeService, Database, "Данные домов")
+Rel(DeviceService, Database, "Данные устройств")
+Rel(TelemetryService, Database, "Телеметрия")
+Rel(ScenarioService, Database, "Данные сценариев")
+
+Rel(DeviceService, MessageBroker, "Команды устройств")
+Rel(TelemetryService, MessageBroker, "Телеметрия")
+Rel(ScenarioService, MessageBroker, "События сценариев")
+Rel(DeviceAdapterService, MessageBroker, "Команды и события")
+
+Rel(DeviceAdapterService, ControlModules, "Команды управления")
+Rel(DeviceAdapterService, Sensors, "Получение данных")
+
+@enduml

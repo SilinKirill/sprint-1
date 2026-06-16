@@ -1,0 +1,103 @@
+@startuml
+
+title ER-диаграмма To-Be системы "Тёплый дом"
+
+top to bottom direction
+
+class User {
+  +UUID id
+  +String email
+  +String name
+  +String phone
+  +LocalDateTime createdAt
+  +LocalDateTime updatedAt
+}
+
+class House {
+  +UUID id
+  +UUID userId
+  +String name
+  +String address
+  +LocalDateTime createdAt
+  +LocalDateTime updatedAt
+}
+
+class Module {
+  +UUID id
+  +String code
+  +String name
+  +String description
+  +Boolean enabled
+}
+
+class DeviceType {
+  +UUID id
+  +UUID moduleId
+  +String code
+  +String name
+  +String category
+  +String protocol
+}
+
+class Device {
+  +UUID id
+  +UUID houseId
+  +UUID typeId
+  +String name
+  +String serialNumber
+  +DeviceStatus status
+  +LocalDateTime createdAt
+  +LocalDateTime updatedAt
+}
+
+class DeviceCommand {
+  +UUID id
+  +UUID deviceId
+  +CommandType commandType
+  +CommandStatus commandStatus
+  +String parameters
+  +LocalDateTime createdAt
+  +LocalDateTime updatedAt
+}
+
+class TelemetryData {
+  +UUID id
+  +UUID deviceId
+  +String type
+  +String value
+  +String unit
+  +LocalDateTime measuredAt
+}
+
+class Scenario {
+  +UUID id
+  +UUID houseId
+  +String name
+  +String condition
+  +Boolean enabled
+  +LocalDateTime createdAt
+  +LocalDateTime updatedAt
+}
+
+class ScenarioAction {
+  +UUID id
+  +UUID scenarioId
+  +UUID deviceId
+  +CommandType commandType
+  +String parameters
+}
+
+User "1" -- "0..*" House : управляет
+House "1" -- "0..*" Device : содержит
+
+Module "1" -- "0..*" DeviceType : включает типы устройств
+DeviceType "1" -- "0..*" Device : определяет тип
+
+Device "1" -- "0..*" DeviceCommand : команды
+Device "1" -- "0..*" TelemetryData : генерирует
+
+House "1" -- "0..*" Scenario : содержит
+Scenario "1" -- "0..*" ScenarioAction : включает
+Device "1" -- "0..*" ScenarioAction : используется в действиях
+
+@enduml

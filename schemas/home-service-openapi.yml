@@ -1,0 +1,74 @@
+openapi: 3.2.0
+
+info:
+  title: Warm House Home Service API
+  version: 1.0.0
+  description: REST API сервиса домов системы "Тёплый дом"
+
+servers:
+  - url: http://localhost:8080
+    description: API Gateway
+
+paths:
+  /api/v1/houses/{houseId}/devices:
+    get:
+      summary: Получить список устройств дома
+      parameters:
+        - name: houseId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          examples:
+            houseId:
+              value: "22222222-2222-2222-2222-222222222222"
+      responses:
+        '200':
+          description: Список устройств дома
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DeviceResponse'
+              examples:
+                success:
+                  value:
+                    - id: "33333333-3333-3333-3333-333333333333"
+                      houseId: "22222222-2222-2222-2222-222222222222"
+                      typeId: "44444444-4444-4444-4444-444444444444"
+                      name: "Реле отопления"
+                      serialNumber: "AA-HEAT-0001"
+                      status: "ACTIVE"
+                    - id: "33333333-3333-3333-3333-333333333334"
+                      houseId: "22222222-2222-2222-2222-222222222222"
+                      typeId: "44444444-4444-4444-4444-444444444445"
+                      name: "Датчик температуры"
+                      serialNumber: "AA-TEMP-0001"
+                      status: "ACTIVE"
+        '404':
+          description: Дом не найден
+        '500':
+          description: Внутренняя ошибка сервера
+
+components:
+  schemas:
+    DeviceResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        houseId:
+          type: string
+          format: uuid
+        typeId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        serialNumber:
+          type: string
+        status:
+          type: string

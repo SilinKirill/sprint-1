@@ -1,0 +1,33 @@
+@startuml
+
+title Диаграмма компонентов сервиса сценариев
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Container_Boundary(WarmHouseSystem, "Тёплый дом") {
+  Container(ScenarioService, "Сервис сценариев", "Microservice", "Правила автоматизации")
+  Container(MessageBroker, "Брокер сообщений", "Kafka/RabbitMQ", "Асинхронный обмен")
+  Container(Database, "База данных сервиса", "Database", "Хранилище данных")
+}
+
+Container(ScenarioService, "Сервис сценариев", "Microservice") {
+  Component(ScenarioController, "ScenarioController", "API сценариев")
+  Component(ScenarioConsumer, "ScenarioConsumer", "Получение событий")
+  Component(ScenarioServiceLayer, "ScenarioService", "Управление сценариями")
+  Component(ScenarioExecutor, "ScenarioExecutor", "Выполнение сценариев")
+  Component(ScenarioRepository, "ScenarioRepository", "Доступ к данным сценариев")
+  Component(CommandPublisher, "CommandPublisher", "Публикация команд")
+}
+
+Rel(ScenarioController, ScenarioServiceLayer, "Вызывает")
+Rel(ScenarioConsumer, ScenarioExecutor, "Передаёт событие")
+Rel(ScenarioServiceLayer, ScenarioRepository, "Данные сценариев")
+Rel(ScenarioExecutor, ScenarioRepository, "Читает правила")
+Rel(ScenarioExecutor, CommandPublisher, "Создаёт команды")
+Rel(MessageBroker, ScenarioConsumer, "События устройств")
+Rel(CommandPublisher, MessageBroker, "Команды устройств")
+Rel(ScenarioRepository, Database, "Данные сценариев")
+
+@enduml

@@ -1,0 +1,83 @@
+openapi: 3.2.0
+
+info:
+  title: Warm House Telemetry Service API
+  version: 1.0.0
+  description: REST API сервиса телеметрии системы "Тёплый дом"
+
+servers:
+  - url: http://localhost:8080
+    description: API Gateway
+
+paths:
+  /api/v1/devices/{deviceId}/telemetry:
+    get:
+      summary: Получить телеметрию устройства
+      parameters:
+        - name: deviceId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          examples:
+            deviceId:
+              value: "33333333-3333-3333-3333-333333333333"
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+          examples:
+            defaultLimit:
+              value: 20
+      responses:
+        '200':
+          description: Телеметрия устройства
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TelemetryDataResponse'
+              examples:
+                success:
+                  value:
+                    - id: "77777777-7777-7777-7777-777777777777"
+                      deviceId: "33333333-3333-3333-3333-333333333333"
+                      type: "TEMPERATURE"
+                      value: "21.5"
+                      unit: "C"
+                      measuredAt: "2026-06-04T12:05:00"
+                    - id: "77777777-7777-7777-7777-777777777778"
+                      deviceId: "33333333-3333-3333-3333-333333333333"
+                      type: "STATE"
+                      value: "ON"
+                      unit: ""
+                      measuredAt: "2026-06-04T12:00:00"
+        '404':
+          description: Устройство не найдено
+        '500':
+          description: Внутренняя ошибка сервера
+
+components:
+  schemas:
+    TelemetryDataResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        deviceId:
+          type: string
+          format: uuid
+        type:
+          type: string
+        value:
+          type: string
+        unit:
+          type: string
+        measuredAt:
+          type: string
+          format: date-time

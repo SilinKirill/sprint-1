@@ -27,29 +27,32 @@ func main() {
 
 	log.Println("Connected to database successfully")
 
-	// Initialize temperature service
 	temperatureAPIURL := getEnv("TEMPERATURE_API_URL", "http://temperature-api:8081")
 	temperatureService := services.NewTemperatureService(temperatureAPIURL)
+	deviceServiceURL := getEnv("DEVICE_SERVICE_URL", "http://device-service:8082")
+	deviceService := services.NewDeviceService(deviceServiceURL)
+	telemetryServiceURL := getEnv("TELEMETRY_SERVICE_URL", "http://telemetry-service:8083")
+	telemetryService := services.NewTelemetryService(telemetryServiceURL)
 	log.Printf("Temperature service initialized with API URL: %s\n", temperatureAPIURL)
+	log.Printf("Device service initialized with API URL: %s\n", deviceServiceURL)
+	log.Printf("Telemetry service initialized with API URL: %s\n", telemetryServiceURL)
 
-	// Initialize router
 	router := gin.Default()
 
-	// Health check endpoint
 	router.GET("/health", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"status": "ok",
 		})
 	})
 
-	// API routes
 	apiRoutes := router.Group("/api/v1")
 
-	// Register sensor routes
 	sensorHandler := handlers.NewSensorHandler(database, temperatureService)
 	sensorHandler.RegisterRoutes(apiRoutes)
 
-	// Start server
+    integrationHandler := handlers.NewIntegrationHandler(deviceService, telemetryService)
+    integrationHandler.RegisterRoutes(apiRoutes)
+
 	srv := &http.Server{
 		Addr:    getEnv("PORT", ":8080"),
 		Handler: router,
